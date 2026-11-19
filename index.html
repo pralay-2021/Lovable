@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IT Self Service Portal</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f7fb;--card:#fff;--text:#1b2433;--muted:#5b667a;--line:#dfe4ee;--brand:#0f766e;--brandsoft:#e8efff;--ok:#0f7b4a;--okbg:#e3f6ec;--warn:#fff6e0;--warnline:#f0d58a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141d;--card:#18202d;--text:#e8edf6;--muted:#9aa6ba;--line:#2a3547;--brand:#5eead4;--brandsoft:#1e2b46;--ok:#5fd39a;--okbg:#14382a;--warn:#2b2412;--warnline:#5c4c1c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f141d;--card:#18202d;--text:#e8edf6;--muted:#9aa6ba;--line:#2a3547;--brand:#5eead4;--brandsoft:#1e2b46;--ok:#5fd39a;--okbg:#14382a;--warn:#2b2412;--warnline:#5c4c1c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5}
+header{background:var(--brand);color:#fff;padding:28px 20px}
+header h1{margin:0 0 4px;font-size:1.6rem}
+header p{margin:0;opacity:.9}
+.wrap{max-width:1000px;margin:0 auto;padding:20px;display:grid;grid-template-columns:300px 1fr;gap:20px}
+@media(max-width:720px){.wrap{grid-template-columns:1fr}}
+nav{display:flex;flex-direction:column;gap:6px}
+@media(max-width:720px){nav{flex-direction:row;overflow-x:auto;padding-bottom:6px}nav button{white-space:nowrap}}
+nav button{background:var(--card);border:1px solid var(--line);color:var(--text);padding:11px 14px;border-radius:10px;text-align:left;font:inherit;cursor:pointer}
+nav button:hover{border-color:var(--brand)}
+nav button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+main h2{margin:0 0 14px;font-size:1.3rem}
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.item>button{all:unset;box-sizing:border-box;width:100%;padding:16px;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.item>button:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.t{font-weight:600}
+.badge{display:inline-block;font-size:.72rem;font-weight:600;color:var(--ok);background:var(--okbg);border-radius:20px;padding:2px 9px;margin-left:8px;vertical-align:middle}
+.d{color:var(--muted);font-size:.92rem;margin-top:2px}
+.badge.it{color:var(--text);background:var(--warn);border:1px solid var(--warnline)}
+.plus{font-size:1.4rem;line-height:1;color:var(--brand);transition:transform .2s}
+.item.open .plus{transform:rotate(45deg)}
+.body{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
+.item.open .body{display:block}
+.body a{color:var(--brand);font-weight:600;text-decoration:underline;word-break:break-word}
+.body h4{margin:14px 0 6px;font-size:.95rem}
+.body ol{margin:0;padding-left:20px}
+.body li{margin-bottom:5px}
+.still{margin-top:14px;background:var(--warn);border:1px solid var(--warnline);border-radius:8px;padding:10px 12px;font-size:.92rem}
+.soon{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:28px;text-align:center;color:var(--muted)}
+#q{margin-top:14px;width:100%;max-width:420px;padding:11px 14px;border:0;border-radius:10px;font:inherit;background:var(--card);color:var(--text)}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.intro h3{margin:0 0 6px;font-size:1.05rem}
+.intro p{margin:0 0 12px;color:var(--muted);font-size:.92rem}
+.intro h4{margin:0 0 6px;font-size:.95rem}
+.intro ol{margin:0;padding-left:20px;font-size:.92rem}
+.intro li{margin-bottom:5px}
+.intro ul{margin:0;padding-left:20px;font-size:.92rem}
+.habits{margin-top:14px;margin-bottom:0;border-top-color:#0d9488}
+.never{border-top-color:#dc2626}
+.ticket{margin-top:14px;margin-bottom:0;border-top-color:#f59e0b}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;align-items:start}
+.pair .intro{margin:0}
+@media(max-width:720px){.pair{grid-template-columns:1fr}}
+aside{min-width:0}
+body{background:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background:#0f141d}}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff;border-radius:14px;padding:16px 24px;margin-bottom:16px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.18);animation:bin .45s ease}
+.banner svg{width:190px;max-width:42%;flex:none;animation:fl 3.5s ease-in-out infinite}
+.bt{font-size:1.45rem;font-weight:700}.bd{opacity:.92;margin:4px 0 10px}
+.bc{display:inline-block;background:rgba(255,255,255,.22);border-radius:20px;padding:3px 12px;font-size:.82rem}
+@keyframes fl{50%{transform:translateY(-6px)}}
+@keyframes bin{from{opacity:0;transform:translateY(8px)}}
+nav button{transition:transform .15s,border-color .15s}nav button:hover{transform:translateX(3px)}
+.item{transition:box-shadow .2s}.item:hover{box-shadow:0 4px 14px rgba(37,99,235,.18)}
+header{background:radial-gradient(circle at 85% 20%,rgba(20,184,166,.30),transparent 45%),linear-gradient(135deg,#0f172a 0%,#1e293b 55%,#134e4a 100%);border-bottom:3px solid #14b8a6;position:relative;overflow:hidden}
+header::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
+.hero{position:relative}
+.hero h1{font-weight:700;letter-spacing:.3px}
+.hero svg{animation:fl 4s ease-in-out infinite}
+header p{color:#bcd3ee}
+#q{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
+#q::placeholder{color:#c6d8ee}
+body{background:linear-gradient(160deg,var(--t1,#effcfa),var(--t2,#cdf3ee)) fixed;transition:background .4s}
+.ic{width:34px;height:34px;color:#fff;box-shadow:0 2px 6px rgba(15,23,42,.25)}
+.ic svg{width:20px;height:20px}
+nav button.on .ic{box-shadow:0 0 0 2px #fff}
+.srow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#q{margin-top:0;flex:1;min-width:200px}
+#gbtn{background:#14b8a6;color:#04201d;border:0;border-radius:10px;padding:0 18px;font:inherit;font-weight:700;cursor:pointer;min-height:42px;transition:transform .15s,background .15s}
+#gbtn:hover{background:#5eead4;transform:translateY(-2px)}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#d9fbf5;border-radius:20px;padding:3px 12px;font-size:.8rem;margin-top:12px}
+.pill i{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.7)}100%{box-shadow:0 0 0 9px rgba(74,222,128,0)}}
+@keyframes gridm{to{background-position:36px 36px,36px 36px}}
+header::before{animation:gridm 14s linear infinite}
+.hero svg{width:360px}
+@keyframes blink{50%{opacity:.2}}
+.led{animation:blink 1.6s infinite}
+@keyframes dash{to{stroke-dashoffset:-10}}
+.flow{stroke-dasharray:5 5;animation:dash 1s linear infinite}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}
+.item{animation:up .45s both}
+.item:nth-child(3){animation-delay:.06s}.item:nth-child(4){animation-delay:.12s}.item:nth-child(5){animation-delay:.18s}.item:nth-child(6){animation-delay:.24s}.item:nth-child(7){animation-delay:.3s}.item:nth-child(8){animation-delay:.36s}
+.gsearch{display:flex;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-left:4px solid #ea4335;border-radius:12px;padding:14px 16px;margin-bottom:14px;color:var(--text);text-decoration:none;transition:transform .15s,box-shadow .15s}
+.gsearch:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+header{background:linear-gradient(120deg,#1e3a8a,#6d28d9 55%,#0d9488);padding:0;box-shadow:0 4px 16px rgba(30,58,138,.25)}
+.hero{max-width:1000px;margin:0 auto;padding:26px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hero h1{font-size:1.9rem}
+.logo{display:inline-block;background:#fff;border-radius:12px;padding:8px 14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.logo img{display:block;height:56px;width:auto;max-width:100%}
+.hero svg{width:300px;max-width:38%;flex:none}
+@media(max-width:720px){.hero svg{display:none}}
+nav button{display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.ic{width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
+.intro{border-top:4px solid #7c3aed;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.strip{background:linear-gradient(120deg,#2563eb,#7c3aed,#0d9488);border-radius:10px;padding:12px;margin-bottom:12px;text-align:center;font-size:1.7rem;letter-spacing:8px}
+.item{border-left:4px solid var(--brand);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.k{display:inline-flex;align-items:center;vertical-align:middle;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 5px;background:var(--bg)}
+.k svg{width:14px;height:14px}
+.wrap.searching{grid-template-columns:1fr}
+.wrap.searching aside,.wrap.searching .pair{display:none}
+footer{text-align:center;color:#cbd5e1;font-size:1rem;line-height:1.8;padding:26px 20px 32px;margin-top:20px;background:linear-gradient(135deg,#0b1220 0%,#14213d 55%,#0f3a3a 100%);border-top:3px solid #14b8a6}
+footer strong{color:#fff;font-weight:600;font-size:1.1rem}
+footer a{color:#5eead4!important;text-decoration:none}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<header><div class="hero"><div>
+  <div class="logo"><img src="data:image/jpeg;base64,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" alt="GTPLKCBPL Digital Cable TV &amp; Broadband" width="420" height="120"></div>
+  <h1>IT Self Service Portal</h1>
+  <p>Pick a service below to find a quick self-fix before raising a ticket.</p>
+  <div class="pill"><i></i>IT Helpdesk online · Self-service portal</div>
+  <div class="srow"><input id="q" type="search" placeholder="Search issues, e.g. printer, wifi, password" aria-label="Search"></div>
+</div>
+<svg viewBox="0 0 360 180" aria-hidden="true"><rect x="8" y="26" width="72" height="118" rx="6" fill="#0b2a2e" stroke="#5eead4" stroke-width="2.5"/><g fill="#134e4a"><rect x="15" y="34" width="58" height="24" rx="3"/><rect x="15" y="64" width="58" height="24" rx="3"/><rect x="15" y="94" width="58" height="24" rx="3"/></g><g fill="#5eead4"><circle class="led" cx="25" cy="46" r="3"/><circle class="led" style="animation-delay:.5s" cx="25" cy="76" r="3"/><circle class="led" style="animation-delay:1s" cx="25" cy="106" r="3"/></g><g stroke="#99f6e4" stroke-width="2" opacity=".7"><path d="M36 46h30M36 76h30M36 106h30"/></g><rect x="22" y="148" width="44" height="6" rx="3" fill="#5eead4"/><path class="flow" d="M80 86h20M250 86h20" stroke="#2dd4bf" stroke-width="2.5" fill="none"/><rect x="100" y="22" width="150" height="96" rx="8" fill="#0b2a2e" stroke="#99f6e4" stroke-width="3"/><rect x="108" y="30" width="134" height="80" rx="4" fill="#134e4a"/><path d="M175 42l24 8v16c0 14-10 22-24 27-14-5-24-13-24-27V50z" fill="#2dd4bf"/><path d="M164 70l8 8 15-17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M160 118h30l6 18h-42z" fill="#99f6e4"/><rect x="140" y="136" width="70" height="6" rx="3" fill="#5eead4"/><rect x="278" y="52" width="56" height="24" rx="3" fill="#99f6e4" opacity=".85"/><rect x="266" y="76" width="80" height="44" rx="9" fill="#0b2a2e" stroke="#5eead4" stroke-width="2.5"/><circle class="led" cx="334" cy="88" r="3.5" fill="#5eead4"/><rect x="284" y="108" width="44" height="30" rx="3" fill="#fff"/><path d="M290 118h32M290 126h22" stroke="#14b8a6" stroke-width="3"/><path d="M150 14a34 34 0 0 1 50 0M160 22a20 20 0 0 1 30 0" fill="none" stroke="#99f6e4" stroke-width="3" stroke-linecap="round"/></svg>
+</div></header>
+<div class="wrap">
+  <aside>
+    <div class="intro">
+      <div class="strip">🛠️ 💻 🔧 🖨️</div>
+      <h3>Fix common IT problems yourself, in a few minutes.</h3>
+      <p>Most everyday issues with computers, printers, Wi-Fi and logins can be solved with a few basic steps. Try the guide for your problem first. If it doesn’t work, raise a ticket with the IT team and tell them which steps you already tried.</p>
+    </div>
+    <nav id="menu" aria-label="Service menu"></nav>
+  </aside>
+  <div style="min-width:0">
+    <div class="pair" style="margin:0 0 14px"><div class="intro">
+      <h4>🧰 Before you call IT</h4>
+      <ol>
+        <li>Stay calm and try the simplest fix first: check cables and power.</li>
+        <li>Restart the app, then the computer.</li>
+        <li>Note the exact error message or take a screenshot (<span class="k"><svg viewBox="0 0 24 24" aria-label="Windows key"><path fill="#0078d4" d="M1 3.6l9.4-1.3v9.1H1zM11.6 2.1L23 .5v10.9H11.6zM1 12.6h9.4v9.1L1 20.4zM11.6 12.6H23v10.9l-11.4-1.6z"/></svg></span>+Shift+S).</li>
+        <li>Ask a colleague if they have seen the same issue.</li>
+        <li>Search this guide for your problem.</li>
+        <li>Know your limits. If unsure, stop and call IT.</li>
+      </ol>
+    </div>
+    <div class="intro never">
+      <h4>⛔ Never do this yourself</h4>
+      <ul>
+        <li>Open the computer case or replace internal parts.</li>
+        <li>Install software from unknown websites.</li>
+        <li>Change firewall, antivirus, VPN or network settings.</li>
+        <li>Share your password with anyone, including IT staff.</li>
+      </ul>
+    </div></div>
+    <main id="content"></main>
+    
+  </div>
+</div>
+<div class="wrap" style="display:block;padding-top:0"><div class="pair"><div class="intro ticket">
+      <h4>🎫 When raising a ticket, include</h4>
+      <ul>
+        <li>Your name, department, floor and asset/PC number.</li>
+        <li>What you were doing when the problem started.</li>
+        <li>The exact error message or a screenshot.</li>
+        <li>Which steps from this guide you already tried.</li>
+      </ul>
+    </div>
+    <div class="intro habits">
+      <h4>✅ Daily good habits</h4>
+      <ul>
+        <li>Restart your computer at least once a week.</li>
+        <li>Save work often and keep office files on the shared drive or OneDrive, not only on the desktop.</li>
+        <li>Install updates when prompted; don’t postpone them for days.</li>
+        <li>Keep laptop vents clear; don’t use it on a bed or cushion.</li>
+      </ul>
+    </div></div></div>
+<footer>Copyright &copy; GTPLKCBPL IT Team<br><strong>IT Mobile: <a href="tel:+918335062971" style="color:inherit">8335062971</a> &nbsp;|&nbsp; Landline Extension: 186</strong><br><strong>IT Ticket Portal: <a href="http://45.251.68.170:3000/submit" target="_blank" rel="noopener" style="color:inherit">http://45.251.68.170:3000/submit</a></strong><br><strong>IT Ticket Portal Email: <a href="mailto:itsupport@gtplkcbpl.com" style="color:inherit">itsupport@gtplkcbpl.com</a></strong></footer>
+<script>
+// To add content for another service, fill its "items" array (same shape as Login & Password).
+var SERVICES=[
+ {name:"Login & Password",items:[
+  {title:"Forgot my password",desc:"Can’t log in to Windows, email or an office application.",
+   steps:["Use the ‘Forgot password’ or self-service reset option if the application offers one.","Check your Spam/Junk folder if the reset email doesn’t arrive.","Make sure you are using your official company email ID.","Choose a new strong password: at least 8 characters with capitals, numbers and a symbol."],
+   still:"If there is no self-reset option, contact IT. They will verify your identity before resetting."},
+  {title:"Forgot my username",desc:"Not sure which user ID to log in with.",
+   steps:["Your Windows ID is usually printed on the login screen under ‘Other user’.","Check welcome emails from IT when your account was created.","Use the ‘Forgot username’ option on websites that offer it."],
+   still:"Contact IT with your employee code to confirm your user ID."},
+  {title:"Account locked",it:true,desc:"Message says the account is locked after wrong password attempts.",
+   steps:["Stop trying to log in; more attempts keep the account locked.","Check Caps Lock and the keyboard language (ENG) on the taskbar.","Wait 15–30 minutes; some accounts unlock automatically."],
+   still:"Call IT to unlock. If you did NOT cause the wrong attempts, tell IT, as someone may be trying to access your account."}
+ ]},
+ {name:"Computer & Speed",items:[
+  {title:"Computer won’t turn on",it:true,desc:"No lights, no fan sound, black screen.",
+   steps:["Check the power cable is firmly plugged into the PC and the wall socket/UPS.","Switch on the UPS and confirm the socket works with another device.","For laptops, connect the charger and wait 5 minutes before pressing power.","Check the monitor is ON and its cable is connected: the PC may be running with a dark screen.","Hold the power button for 10 seconds, release, then press once."],
+   still:"If there are still no lights or sounds, the power supply or motherboard may be faulty. Don’t open the case; call IT."},
+  {title:"Computer or laptop overheating",it:true,desc:"Hot body, loud fan, sudden shutdowns.",
+   steps:["Keep the laptop on a hard, flat desk; never on a bed, pillow or lap.","Make sure air vents are not blocked and the desk area isn’t dusty.","Close heavy programs you aren’t using.","Shut down, unplug, and let it cool for 15 minutes."],
+   still:"If it keeps shutting down, the fan may be failing or need internal cleaning. Call IT; don’t open it yourself."},
+  {title:"Low disk space",desc:"Warning that C: drive is full; can’t save or update.",
+   steps:["Empty the Recycle Bin.","Delete old files from the Downloads folder.","Run ‘Disk Cleanup’ from the Start menu and tick Temporary files.","Move large personal files (videos, photos) off the office PC.","Move work files to the shared drive / OneDrive."],
+   still:"Ask IT before uninstalling any software you’re unsure about."},
+  {title:"Computer is very slow",desc:"Takes a long time to open files or programs, freezes often.",
+   steps:["Restart the computer. Shut down at the end of every day.","Open Task Manager (Ctrl+Shift+Esc) and close programs you aren’t using.","Close extra browser tabs; each tab uses memory.","Free up disk space: empty the Recycle Bin and run ‘Disk Cleanup’ from the Start menu.","Install pending Windows updates, then restart.","Run a full antivirus scan."],
+   still:"If it stays slow after all steps, the PC may need more RAM or an SSD. Report it to IT."},
+  {title:"Blue screen error (BSOD)",it:true,desc:"Blue screen with an error code, then the computer restarts.",
+   steps:["Note or photograph the stop code shown on the blue screen.","Restart the computer.","Remove any newly connected USB device and restart again.","Install pending Windows updates."],
+   still:"If the blue screen appears more than once, report it with the stop code. It may be a hardware problem."}
+ ]},
+ {name:"Internet & Network",items:[
+  {title:"Internet is slow",it:true,desc:"Websites and email take long to load.",
+   steps:["Restart your computer.","Check if colleagues also have slow internet. If yes, it’s a network issue: inform IT.","On Wi-Fi, move closer to the access point or use a LAN cable if available.","Check the LAN cable is firmly clicked in at both ends.","Close streaming videos and large downloads."],
+   still:"If the whole office or floor is slow, report it to IT immediately; do not restart office routers or switches yourself."},
+  {title:"No internet on LAN cable",it:true,desc:"Network icon shows a red cross or globe symbol.",
+   steps:["Check the cable is clicked into both the PC and the wall/desk port.","Look for blinking lights near the network port on the PC.","Try another cable or port if one is free nearby.","Restart the computer."],
+   still:"If the port lights stay off, the cable or wall port may be faulty. Call IT."},
+  {title:"VPN not connecting or slow",it:true,desc:"Can’t access office systems from outside the office.",
+   steps:["First make sure normal internet works on your device.","Disconnect and reconnect the VPN.","Check the VPN username and password are correct.","Restart the device and try again."],
+   still:"Do not change VPN settings or install another VPN app. Contact IT with the error message."},
+  {title:"Wi-Fi keeps disconnecting",desc:"Wi-Fi drops or shows ‘No internet’.",
+   steps:["Turn Wi-Fi off and on from the taskbar.","Restart the computer.","Forget the network (Settings → Network → Wi-Fi → Manage known networks) and reconnect with the correct password.","Make sure Airplane mode is off."],
+   still:"If only your laptop has the issue after these steps, contact IT to check the Wi-Fi driver."},
+  {title:"Can’t open shared folder or network drive",desc:"Mapped drive shows a red X, or ‘Access denied’.",
+   steps:["Restart your computer and check your internet connection.","Make sure you’re logged in with your own company account.","Open the folder by its full path from File Explorer.","Check with a colleague whether they can open the same folder."],
+   still:"‘Access denied’ means you need permission. Ask your manager to approve and IT to grant access."}
+ ]},
+ {name:"Printer & Scanner",items:[
+  {title:"Printer not printing",desc:"Document sent but nothing comes out.",
+   steps:["Check the printer is ON and shows no error light or message.","Check for paper in the tray and any paper jam; remove jammed paper gently in the direction of the paper path.","Make sure you selected the correct printer in the Print window.","Open the print queue (Settings → Printers) and cancel stuck jobs, then print again.","Turn the printer off for 30 seconds and back on."],
+   still:"If the printer shows an error code, or prints for others but not you, contact IT."},
+  {title:"Can’t print in colour",desc:"Colour printer prints only black and white.",
+   steps:["In Printer Properties, make sure ‘Grayscale’ or ‘Black & white’ is not selected.","Check colour ink/toner levels on the printer display.","Some printers allow colour only for approved users; check with your admin team."],
+   still:"Report empty cartridges to admin/IT for replacement."},
+  {title:"Printing in wrong size or layout",desc:"Page cut off, wrong orientation or wrong paper size.",
+   steps:["In the Print window, check paper size (A4 / Legal) matches the paper in the tray.","Check orientation: Portrait or Landscape.","Select the correct paper tray.","Use ‘Print preview’ and adjust margins or ‘Fit to page’."],
+   still:"Usually self-fixable. Contact IT only if settings keep resetting."},
+  {title:"Scanner not working",desc:"Scan button does nothing or PC doesn’t detect the scanner.",
+   steps:["Restart the scanner or multifunction printer.","Check the USB or network cable.","Make sure you’re using the scan software or scan-to-email option set up by IT.","Restart the computer."],
+   still:"If the driver is missing, IT needs to install it."},
+  {title:"HP LaserJet 1020 Plus: driver download",it:true,desc:"Printer not detected or driver missing for HP LaserJet 1020 Plus.",
+   steps:["Open the official HP page: [[HP LaserJet 1020 driver download|https://support.hp.com/ro-en/drivers/hp-laserjet-1020-printer-series/model/3329726]] (opens in a new tab).","Check your Windows version and 32-bit / 64-bit (Settings → System → About) and choose the matching driver.","Click Download and run the downloaded file.","Connect the printer with the USB cable and turn it ON when the installer asks.","After install, print a test page (Settings → Printers → HP LaserJet 1020 → Print test page)."],
+   still:"If it asks for an administrator password or the install fails, contact IT."},
+  {title:"HP LaserJet Pro MFP M126nw: driver download",it:true,desc:"Printer or scanner not detected, or driver missing for HP LaserJet Pro MFP M126nw.",
+   steps:["Open the official HP page: [[HP LaserJet Pro MFP M126 driver download|https://support.hp.com/us-en/drivers/hp-laserjet-pro-mfp-m126-series/model/5303411]] (opens in a new tab).","Check your Windows version and 32-bit / 64-bit (Settings → System → About) and choose the matching driver.","Download the full driver and software package, then run it.","When asked for the connection type, choose Network (or USB if connected by cable). The PC must be on the same office network as the printer.","After install, print a test page and try one scan to check the scanner also works."],
+   still:"If the printer is not found on the network or the install needs an administrator password, contact IT."},
+ ]},
+ {name:"Monitor, USB & Devices",items:[
+  {title:"Monitor shows ‘No signal’",desc:"Screen is blank or second monitor not detected.",
+   steps:["Check both ends of the HDMI / VGA / DisplayPort cable.","Check the monitor’s power cable and that it’s switched on.","Use the monitor’s Input/Source button to pick the correct input.","Press Win+P and choose Duplicate or Extend.","Restart the computer."],
+   still:"If another cable doesn’t help, contact IT."},
+  {title:"USB / pen drive not detected",desc:"Nothing happens when a USB device is plugged in.",
+   steps:["Try another USB port, preferably at the back of the PC.","Restart the computer.","Test the device on another PC to see if the device itself is faulty."],
+   still:"Some office PCs block USB storage for security. Ask IT if you need access approved."},
+  {title:"Keyboard or mouse not working",desc:"No response, typing wrong characters, or cursor jumping.",
+   steps:["Reconnect the USB plug or try another port.","For wireless devices, replace the batteries and check the power switch.","Check Num Lock and Caps Lock.","If typing wrong characters, check the language setting (ENG) on the taskbar."],
+   still:"Request a replacement from IT if still faulty."},
+  {title:"Projector not showing the screen",desc:"Laptop connected in the meeting room but nothing displays.",
+   steps:["Check the HDMI cable is properly connected.","Select the correct input on the projector or TV remote (HDMI 1 / HDMI 2).","Press Win+P and choose Duplicate.","Unplug and reconnect the cable."],
+   still:"For important meetings, test the room 15 minutes earlier and call IT if needed."},
+  {title:"Microphone or webcam not working",desc:"Others can’t hear or see you in Teams / Zoom / Meet.",
+   steps:["Check the mute button and camera cover/shutter on the device.","In the meeting app, open Settings → Devices and pick the right mic and camera.","Close other apps that may be using the camera.","Unplug and reconnect a USB headset, then restart the app.","Restart the computer."],
+   still:"If the device isn’t listed at all, contact IT for a driver check."}
+ ]},
+ {name:"Software & Email",items:[
+  {title:"Software won’t open or crashes",it:true,desc:"Program closes suddenly or doesn’t start.",
+   steps:["Close the program fully and open it again.","Check Task Manager for a frozen copy and click ‘End task’.","Restart the computer.","Install any pending updates for the software.","Note the exact error message."],
+   still:"Don’t reinstall or download software yourself. Send IT the error message."},
+  {title:"Error message appears",desc:"A pop-up with an error code.",
+   steps:["Read the message fully and note the error code or take a screenshot.","Try the action again once.","Restart the application.","Search this guide or the vendor’s official help page using the error code."],
+   still:"Send the screenshot to IT when raising a ticket. It saves a lot of time."},
+  {title:"Missing feature in software",desc:"A menu or option colleagues have isn’t available to me.",
+   steps:["Check you have the same software version as your colleague (Help → About).","Make sure you’re signed in with your company account.","Restart the software after signing in."],
+   still:"You may need a different licence or permission. Ask IT."},
+  {title:"Lost unsaved work",desc:"Program closed before I saved my document.",
+   steps:["Reopen the program; Word, Excel and PowerPoint usually show a ‘Document Recovery’ panel.","In Office, go to File → Info → Manage Document → Recover unsaved documents.","In future, turn on AutoSave and store files on OneDrive / SharePoint."],
+   still:"IT may help with recovery, but success isn’t guaranteed. Save often."},
+  {title:"Windows update failing",desc:"Updates stuck or keep failing.",
+   steps:["Make sure your internet connection is working.","Free up disk space (see ‘Low disk space’).","Restart the computer and run Windows Update again.","Keep laptops on the charger during updates."],
+   still:"If the same update fails repeatedly, report it to IT with the update number (KB....)."}
+ ]},
+ {name:"Files & Data",items:[
+  {title:"Deleted a file by mistake",desc:"An important file is gone.",
+   steps:["Open the Recycle Bin, right-click the file and choose Restore.","For OneDrive / SharePoint files, check the online Recycle Bin.","For files on a shared drive, contact IT quickly: backups may have a copy."],
+   still:"Report it the same day; older backups may be overwritten."},
+  {title:"External hard drive not detected",it:true,desc:"Drive doesn’t appear in File Explorer.",
+   steps:["Check the cable and try another USB port.","Try the drive on another computer.","Don’t format the drive if Windows asks; it will erase the data."],
+   still:"Contact IT before taking any action on drives with important data."},
+  {title:"Can’t find a file",desc:"Don’t remember where the file was saved.",
+   steps:["Use the search box in File Explorer and type part of the file name.","In Word / Excel, check File → Open → Recent.","Check the Downloads folder and email attachments.","Right-click the folder → Properties → Previous Versions, if enabled."],
+   still:"For shared drives, IT can search backups."}
+ ]},
+ {name:"Security",items:[
+  {title:"Suspicious email (phishing)",it:true,desc:"Email asks to click a link, open an attachment, share a password or OTP, or make an urgent payment.",
+   steps:["Do NOT click links or open attachments.","Check the sender’s actual email address, not just the display name.","Watch for warning signs: urgency, spelling mistakes, unexpected invoices, requests for passwords or OTPs.","If an email from a known person seems unusual, confirm by calling them."],
+   still:"Report the email to IT. If you already clicked or entered your password, call IT immediately and change your password."},
+  {title:"Someone may be using my account",it:true,desc:"Login alerts, emails sent that you didn’t write, password changed.",
+   steps:["Change your password right away from a trusted computer.","Turn on two-factor authentication (2FA) if available.","Check email sent items and rules for anything you didn’t create."],
+   still:"Report to IT immediately so they can secure the account."},
+  {title:"Virus or strange pop-ups",it:true,desc:"Unexpected pop-ups, new browser toolbars, files changing.",
+   steps:["Disconnect from the network (unplug LAN / turn off Wi-Fi).","Do not enter passwords or open banking/office systems.","Run a full scan with the company antivirus.","Don’t click ‘Call Microsoft support’ pop-ups: they are scams."],
+   still:"Call IT immediately. Do not try a System Restore or reinstall yourself."},
+  {title:"Lost or stolen laptop or phone",it:true,desc:"Office device with company data is missing.",
+   steps:["Inform IT and your manager immediately.","Change passwords for email and office systems from another device.","Use Find My Device (Android/Windows) or Find My (iPhone) to locate or remotely erase it.","File a police complaint (FIR) if stolen."],
+   still:"IT can lock the device and block access to company data."}
+ ]},
+ {name:"Outlook Problem",items:[
+  {title:"Outlook not opening or stuck",desc:"Outlook hangs on loading, shows \u2018Not responding\u2019 or closes by itself.",
+   steps:["Close Outlook fully from Task Manager (Ctrl+Shift+Esc) and open it again.","Check your internet connection.","Restart the computer.","Hold the Ctrl key while opening Outlook to start it in Safe Mode."],
+   still:"If Outlook still doesn\u2019t open, contact IT with the exact error message."},
+  {title:"Can\u2019t send or receive email",desc:"Mails stay in the Outbox, or new mails are not arriving.",
+   steps:["Check the Outbox folder and the \u2018Working Offline\u2019 setting (Send/Receive tab).","Delete large attachments and empty Deleted Items and Junk to free mailbox space.","Archive old mails.","Check Spam/Junk for missing mails."],
+   still:"If the mailbox is full, ask IT to increase the mailbox size."},
+  {title:"Outlook mail configure: POP",desc:"Add a new email account in Outlook using POP settings.",
+   steps:["In Outlook go to File \u2192 Add Account \u2192 Manual setup or additional server types \u2192 POP or IMAP \u2192 choose POP.","Type your email address. Incoming mail server: poppro.zoho.com. Outgoing mail server (SMTP): smtppro.zoho.com.","Enter your email address and password.","Click More Settings \u2192 Outgoing Server tab and tick the check box that the outgoing server (SMTP) requires authentication.","Open the Advanced tab: POP port 995, SMTP port 465, encryption type SSL/TLS. Click OK, then Next and Finish."],
+   still:"If it still doesn\u2019t connect, don\u2019t try other settings yourself. Contact IT with a screenshot."},
+  {title:"Outlook mail configure: IMAP",desc:"Add a new email account in Outlook using IMAP settings.",
+   steps:["In Outlook go to File \u2192 Add Account \u2192 Manual setup or additional server types \u2192 POP or IMAP \u2192 choose IMAP.","Type your email address. Incoming mail server: imappro.zoho.com. Outgoing mail server (SMTP): smtppro.zoho.com.","Enter your email address and password.","Click More Settings \u2192 Outgoing Server tab and tick the check box that the outgoing server (SMTP) requires authentication.","Open the Advanced tab: IMAP port 993, SMTP port 465, encryption type SSL/TLS.","Click OK, then Next and Finish."],
+   still:"If it still doesn\u2019t connect, don\u2019t try other settings yourself. Contact IT with a screenshot."}
+ ]},
+ {name:"AnyDesk Problem",items:[
+  {title:"AnyDesk not connecting",it:true,desc:"IT cannot connect to your PC, or AnyDesk shows an error.",
+   steps:["Check your internet connection.","Make sure AnyDesk is open and shows your 9-digit AnyDesk ID.","Restart AnyDesk, then the computer.","Use only the AnyDesk version installed by IT."],
+   still:"Do not download AnyDesk from the internet. Call IT and read out your AnyDesk ID."},
+  {title:"Accepting a remote session safely",desc:"A pop-up asks you to accept an incoming AnyDesk request.",
+   steps:["Accept only if you have just asked IT for help and know the person.","Never share your AnyDesk ID or password with an unknown caller.","Click Decline if you are unsure.","Close the session when the work is finished."],
+   still:"If an unknown person asks you to install AnyDesk, hang up and report it to IT."}
+ ]},
+ {name:"Extension Phone",items:[
+  {title:"Extension phone not working",it:true,desc:"No dial tone, blank display or no power.",
+   steps:["Check the handset cable is firmly connected to the phone.","Check the LAN / power cable at the back of the phone.","Unplug the phone for 30 seconds and plug it back in.","Try another extension phone on the same desk if available."],
+   still:"If it still has no dial tone, call IT from another phone on extension 186."},
+  {title:"Can\u2019t hear or voice is breaking",desc:"Low volume, echo or the other person can\u2019t hear you.",
+   steps:["Increase the handset volume and check the Mute button.","Check the handset cable for damage.","Switch between handset and speaker to find the problem.","Ask the other person to try calling again."],
+   still:"If the problem happens on every call, report it to IT."}
+ ]},
+ {name:"Microsoft Excel",items:[
+  {title:"Excel not responding or crashes",desc:"Excel freezes, closes suddenly or is very slow.",
+   steps:["Wait for a minute; large files can take time.","Close Excel from Task Manager and reopen it; use the Document Recovery panel.","Hold the Ctrl key while opening Excel to start it in Safe Mode.","Turn off unused add-ins (File \u2192 Options \u2192 Add-ins)."],
+   still:"If it keeps crashing, send IT the file name and the error message."},
+  {title:"Excel file won\u2019t open or shows \u2018corrupt\u2019",it:true,desc:"Error that the file is damaged or can\u2019t be opened.",
+   steps:["Copy the file to the desktop and try again.","Use File \u2192 Open \u2192 Browse, select the file, click the arrow next to Open and choose \u2018Open and Repair\u2019.","Check whether someone else has the file open on the shared drive.","Look for earlier versions: right-click the file \u2192 Properties \u2192 Previous Versions."],
+   still:"IT may be able to restore the file from a backup. Report it the same day."},
+  {title:"Formulas not calculating",desc:"A formula shows as text or the result doesn\u2019t update.",
+   steps:["Go to Formulas \u2192 Calculation Options and select Automatic.","Check the cell format is not \u2018Text\u2019.","Make sure the formula starts with an equals sign (=).","Press F9 to force a recalculation."],
+   still:"If only one file has the problem, send it to IT or your team lead to check."}
+ ]},
+ {name:"Laptop Problem",items:[
+  {title:"Laptop battery draining fast",desc:"Battery lasts only a short time or drops suddenly.",
+   steps:["Lower the screen brightness and turn on Battery Saver.","Close apps you are not using.","Remove unused USB devices.","Check Task Manager for programs using high power."],
+   still:"If the battery is very old or swollen, stop using it and ask IT for a replacement."},
+  {title:"Laptop screen black or flickering",it:true,desc:"Screen goes black, flickers or shows lines while the laptop is on.",
+   steps:["Press Win+Ctrl+Shift+B to restart the display driver.","Connect an external monitor to check if the laptop is working.","Restart the laptop.","Do not press hard on the screen."],
+   still:"If the external monitor works but the laptop screen doesn\u2019t, the screen or cable may be faulty. Call IT."}
+ ]}
+];
+var ICONS=["🔑","💻","🌐","🖨️","🖥️","✉️","📁","🛡️","📱"],COLORS=["#dbeafe","#ede9fe","#cffafe","#fef3c7","#fce7f3","#dcfce7","#ffedd5","#fee2e2","#e0e7ff"];
+var menu=document.getElementById("menu"),content=document.getElementById("content");
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+var WIN='<span class="k"><svg viewBox="0 0 24 24" aria-label="Windows key"><path fill="#0078d4" d="M1 3.6l9.4-1.3v9.1H1zM11.6 2.1L23 .5v10.9H11.6zM1 12.6h9.4v9.1L1 20.4zM11.6 12.6H23v10.9l-11.4-1.6z"/></svg></span>+';
+function keys(h){return h.replace(/Win\+/g,WIN).replace(/\[\[(.+?)\|(https?:\/\/[^\]\s]+)\]\]/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')}
+var GRAD=[["#14b8a6","#0f766e"],["#7c3aed","#5b21b6"],["#84cc16","#4d7c0f"],["#f59e0b","#b45309"],["#db2777","#9d174d"],["#16a34a","#166534"],["#ea580c","#9a3412"],["#dc2626","#991b1b"],["#06b6d4","#0e7490"],["#f43f5e","#be123c"],["#d946ef","#a21caf"],["#10b981","#047857"],["#78716c","#44403c"]];
+var TAG=["Reset passwords and unlock accounts","Make your PC faster and healthier","Stay connected: Wi-Fi, LAN and VPN","Print and scan without trouble","Screens, USB and meeting-room devices","Fix apps, email and updates","Recover, find and protect your files","Stay safe from phishing and viruses","Fix Outlook mail, calendar and sync","Remote support sessions made easy","Desk phone, extensions and calls","Formulas, files and crashes in Excel","Battery, keyboard, screen and heat"];
+var IMG=[
+`<rect x='60' y='50' width='80' height='60' rx='10' fill='#fff'/><path d='M75 50V36a25 25 0 0 1 50 0v14' fill='none' stroke='#fff' stroke-width='10'/><circle cx='100' cy='76' r='8' fill='#0f766e'/><rect x='97' y='80' width='6' height='16' fill='#0f766e'/>`,
+`<rect x='30' y='20' width='100' height='66' rx='8' fill='#fff'/><rect x='38' y='28' width='84' height='50' rx='4' fill='#7c3aed'/><path d='M60 110h40M80 86v24' stroke='#fff' stroke-width='8' stroke-linecap='round'/><circle cx='160' cy='80' r='30' fill='#fff'/><path d='M160 80l16-16' stroke='#7c3aed' stroke-width='5' stroke-linecap='round'/><circle cx='160' cy='80' r='5' fill='#7c3aed'/>`,
+`<circle cx='100' cy='76' r='38' fill='#fff'/><ellipse cx='100' cy='76' rx='16' ry='38' fill='none' stroke='#4d7c0f' stroke-width='4'/><path d='M62 76h76M70 58h60M70 94h60' stroke='#4d7c0f' stroke-width='4'/><path d='M70 30a42 42 0 0 1 60 0M80 40a28 28 0 0 1 40 0' fill='none' stroke='#fff' stroke-width='6' stroke-linecap='round'/>`,
+`<rect x='70' y='14' width='60' height='30' rx='3' fill='#fff' opacity='.8'/><rect x='40' y='44' width='120' height='48' rx='10' fill='#fff'/><rect x='70' y='76' width='60' height='38' rx='3' fill='#fde68a'/><circle cx='142' cy='60' r='5' fill='#f59e0b'/>`,
+`<rect x='25' y='20' width='110' height='72' rx='8' fill='#fff'/><rect x='33' y='28' width='94' height='56' rx='4' fill='#db2777'/><path d='M65 112h30M80 92v20' stroke='#fff' stroke-width='8' stroke-linecap='round'/><rect x='150' y='44' width='30' height='52' rx='5' fill='#fff'/><rect x='157' y='30' width='16' height='16' fill='#fff'/><rect x='161' y='34' width='3' height='6' fill='#db2777'/><rect x='167' y='34' width='3' height='6' fill='#db2777'/>`,
+`<rect x='40' y='34' width='120' height='78' rx='8' fill='#fff'/><path d='M40 42l60 44 60-44' fill='none' stroke='#16a34a' stroke-width='6'/><circle cx='160' cy='34' r='14' fill='#fbbf24'/>`,
+`<path d='M40 34h44l12 14h64v62H40z' fill='#fff'/><rect x='78' y='62' width='44' height='52' rx='4' fill='#fed7aa'/><path d='M86 76h28M86 88h28M86 100h18' stroke='#ea580c' stroke-width='4'/>`,
+`<path d='M100 14l50 18v36c0 28-22 44-50 54-28-10-50-26-50-54V32z' fill='#fff'/><path d='M78 68l16 16 28-32' fill='none' stroke='#dc2626' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/>`,
+`<rect x='40' y='30' width='120' height='78' rx='8' fill='#fff'/><path d='M40 38l60 42 60-42' fill='none' stroke='#0e7490' stroke-width='6'/><circle cx='152' cy='34' r='16' fill='#fbbf24'/><path d='M152 28v7l5 3' stroke='#fff' stroke-width='3' fill='none' stroke-linecap='round'/>`,
+`<rect x='20' y='26' width='90' height='62' rx='7' fill='#fff'/><rect x='27' y='33' width='76' height='46' rx='3' fill='#be123c'/><rect x='100' y='46' width='80' height='56' rx='7' fill='#fff' opacity='.92'/><rect x='107' y='53' width='66' height='40' rx='3' fill='#fb7185'/><path d='M118 62v22l7-6 5 10 5-2-5-10h9z' fill='#fff'/>`,
+`<path d='M40 56c10-26 110-26 120 0l-14 10c-6-8-20-12-46-12s-40 4-46 12z' fill='#fff'/><rect x='62' y='72' width='76' height='40' rx='6' fill='#fff'/><g fill='#a21caf'><circle cx='80' cy='84' r='4'/><circle cx='100' cy='84' r='4'/><circle cx='120' cy='84' r='4'/><circle cx='80' cy='99' r='4'/><circle cx='100' cy='99' r='4'/><circle cx='120' cy='99' r='4'/></g>`,
+`<rect x='45' y='16' width='110' height='96' rx='8' fill='#fff'/><path d='M45 72h110M82 16v96M119 16v96' stroke='#047857' stroke-width='3'/><rect x='45' y='16' width='110' height='30' rx='8' fill='#047857'/><rect x='86' y='76' width='30' height='26' fill='#a7f3d0'/>`,
+`<rect x='45' y='20' width='110' height='72' rx='7' fill='#fff'/><rect x='53' y='28' width='94' height='56' rx='3' fill='#44403c'/><path d='M28 98h144l-10 14H38z' fill='#fff'/><path d='M85 56l10 10 20-22' fill='none' stroke='#fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/>`];
+function banner(i,s){return "<div class='banner' style='background:linear-gradient(120deg,"+GRAD[i][0]+","+GRAD[i][1]+")'><div><div class='bt'>"+esc(s.name)+"</div><div class='bd'>"+TAG[i]+"</div><span class='bc'>"+s.items.length+" help guides</span></div><svg viewBox='0 0 200 124' aria-hidden='true'>"+IMG[i]+"</svg></div>"}
+var TINT=[['#effcfa','#cdf3ee'],['#f4f0ff','#e4daff'],['#f7fee7','#e0f3b8'],['#fff8e8','#ffe9bd'],['#fff0f6','#ffd8e8'],['#eefaf1','#d1efda'],['#fff3ea','#ffd9bd'],['#fff0f0','#ffd3d3'],['#ecfeff','#c9f1f8'],['#fff1f2','#ffd5da'],['#fdf4ff','#f5d3fb'],['#ecfdf5','#c4efdc'],['#f5f5f4','#e0dedb']];
+var LI=[
+`<rect x='4' y='11' width='16' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/><circle cx='12' cy='16' r='1.2'/>`,
+`<rect x='5' y='5' width='14' height='14' rx='2'/><rect x='9' y='9' width='6' height='6'/><path d='M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3'/>`,
+`<path d='M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0'/><circle cx='12' cy='19.5' r='1'/>`,
+`<path d='M6 9V3h12v6'/><rect x='3' y='9' width='18' height='8' rx='2'/><rect x='7' y='14' width='10' height='7'/>`,
+`<rect x='2' y='4' width='20' height='13' rx='2'/><path d='M8 21h8M12 17v4'/>`,
+`<rect x='3' y='5' width='18' height='14' rx='2'/><path d='M3 7l9 6 9-6'/>`,
+`<path d='M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>`,
+`<path d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'/><path d='M9 12l2 2 4-4'/>`,
+`<circle cx='12' cy='12' r='4'/><path d='M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8'/>`,
+`<rect x='2' y='4' width='20' height='13' rx='2'/><path d='M8 21h8M12 17v4M10 9h4M12 7l2 2-2 2'/>`,
+`<path d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z'/>`,
+`<rect x='3' y='3' width='18' height='18' rx='2'/><path d='M3 9h18M3 15h18M9 3v18M15 3v18'/>`,
+`<rect x='4' y='5' width='16' height='11' rx='2'/><path d='M2 20h20'/>`];
+function show(i,list,title){
+  var s=list?{name:title,items:list}:SERVICES[i];
+  var R=document.documentElement.style;
+  document.querySelector('.wrap').classList.toggle('searching',!!list);
+  if(i>=0){R.setProperty('--t1',TINT[i][0]);R.setProperty('--t2',TINT[i][1]);R.setProperty('--brand',GRAD[i][1])}
+  else{R.removeProperty('--t1');R.removeProperty('--t2');R.removeProperty('--brand')}
+  Array.prototype.forEach.call(menu.children,function(b,j){b.classList.toggle("on",i===j)});
+  var h=list?"<h2>"+esc(s.name)+"</h2>":banner(i,s);
+  if(!s.items.length){h+=list?'<div class="soon">No matching articles found.<br>Please contact IT if you need help.</div>':'<div class="soon">Help articles for this service will be added soon.<br>Please contact IT if you need help now.</div>'}
+  s.items.forEach(function(it){
+    h+='<div class="item"><button type="button" aria-expanded="false"><div><div class="t">'+esc(it.title)+'<span class="badge'+(it.it?' it':'')+'">'+(it.it?'May need IT':'Self-fix')+'</span></div><div class="d">'+esc(it.desc)+'</div></div><span class="plus">+</span></button>'
+     +'<div class="body"><h4>Try these steps</h4><ol>'+it.steps.map(function(x){return"<li>"+keys(esc(x))+"</li>"}).join("")+'</ol>'
+     +'<div class="still"><strong>Still not fixed?</strong> '+esc(it.still)+'</div></div></div>';
+  });
+  content.innerHTML=h;
+  Array.prototype.forEach.call(content.querySelectorAll(".item>button"),function(b){
+    b.onclick=function(){var p=b.parentNode,o=p.classList.toggle("open");b.setAttribute("aria-expanded",o)}
+  });
+}
+SERVICES.forEach(function(s,i){
+  var b=document.createElement("button");b.type="button";b.innerHTML='<span class="ic" style="background:linear-gradient(135deg,'+GRAD[i][0]+','+GRAD[i][1]+')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+LI[i]+'</svg></span><span>'+esc(s.name)+'</span>';b.onclick=function(){show(i)};menu.appendChild(b);
+});
+show(0);
+var qEl=document.getElementById("q");
+function doSearch(){
+  var raw=qEl.value.trim(),v=raw.toLowerCase();
+  if(!v){show(0);return}
+  var w=v.split(/\s+/),r=[];
+  SERVICES.forEach(function(sv){sv.items.forEach(function(it){
+    var t=(sv.name+" "+it.title+" "+it.desc+" "+it.steps.join(" ")+" "+it.still).toLowerCase();
+    if(w.every(function(x){return t.indexOf(x)>-1}))r.push(it)})});
+  show(-1,r,"Search results for \u201c"+raw+"\u201d");
+}
+qEl.oninput=doSearch;
+qEl.onkeydown=function(e){if(e.key==="Enter")doSearch()};
+</script>
+</body>
+</html>
